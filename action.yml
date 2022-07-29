@@ -10,6 +10,9 @@ inputs:
     type: string
     required: true
     description: "the one that looks like 'remerge/xyz'"
+  app_id:
+    description: "App id that we exchange for a token."
+    required: true
   app_key:
     description: "Private app key that we can exchange for a token."
     required: true
@@ -45,14 +48,13 @@ runs:
       id: generate_app_token
       uses: tibdex/github-app-token@v1
       with:
-        app_id: ${{ secrets.DEPUPDATER_APP_KEY }}
+        app_id: ${{  inputs.app_id }}
+        private_key: ${{ inputs.app_key }}
 
         # Optional (defaults to all the Github App permissions).
         # Using a YAML multiline string to avoid escaping the JSON quotes.
         # permissions: >-
         #   {"members": "read"}
-
-        private_key: ${{ secrets.PRIVATE_KEY }}
 
         # Optional (defaults to the current repository).
         # repository: "owner/repo"

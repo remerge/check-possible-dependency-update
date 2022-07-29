@@ -80,3 +80,4 @@ runs:
         body: |
           `go get ${{ inputs.repo_path }} && go mod tidy`
         labels: depupdater
+        assignees: ${{ github.actor }}, ${{ github.triggering_actor }}

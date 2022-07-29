@@ -10,8 +10,8 @@ inputs:
     type: string
     required: true
     description: "the one that looks like 'remerge/xyz'"
-  personal_access_token:
-    description: "Need a PAT with update permissions to send events to a repo"
+  app_key:
+    description: "Private app key that we can exchange for a token."
     required: true
   ssh_key:
     description: "Need an SSH key to fetch private repos"
@@ -41,10 +41,26 @@ runs:
         go mod tidy
         git diff
 
+    - name: Use our App Key to get an App Token
+      id: generate_app_token
+      uses: tibdex/github-app-token@v1
+      with:
+        app_id: ${{ secrets.DEPUPDATER_APP_KEY }}
+
+        # Optional (defaults to all the Github App permissions).
+        # Using a YAML multiline string to avoid escaping the JSON quotes.
+        # permissions: >-
+        #   {"members": "read"}
+
+        private_key: ${{ secrets.PRIVATE_KEY }}
+
+        # Optional (defaults to the current repository).
+        # repository: "owner/repo"
+
     - name: Create or update pull request to update ${{ inputs.repo_name }}
       uses: peter-evans/create-pull-request@v4
       with:
-        token: ${{ inputs.personal_access_token }}
+        token: ${{ steps.generate_app_token.outputs.token }}
         commit-message: Update ${{ inputs.repo_name }}
         committer: Dependency Updater <tech@remerge.io>
         author: Dependency Updater <tech@remerge.io>

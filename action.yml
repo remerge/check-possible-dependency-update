@@ -10,6 +10,10 @@ inputs:
     type: string
     required: true
     description: "the one that looks like 'remerge/xyz'"
+  assign_to:
+    type: string
+    required: true
+    description: "Github username we should assign the PR to"
   app_id:
     description: "App id that we exchange for a token."
     required: true
@@ -80,4 +84,4 @@ runs:
         body: |
           `go get ${{ inputs.repo_path }} && go mod tidy`
         labels: depupdater
-        assignees: ${{ github.actor }}, ${{ github.triggering_actor }}
+        assignees: ${{ inputs.assign_to }}

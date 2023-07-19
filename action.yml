@@ -3,15 +3,12 @@ description: Check a dependency for an update, open/update/close a PR if needed.
 
 inputs:
   repo_path:
-    type: string
     required: true
     description: "the one that looks like 'github.com/remerge/xyz'"
   repo_name:
-    type: string
     required: true
     description: "the one that looks like 'remerge/xyz'"
   assign_to:
-    type: string
     required: true
     description: "Github username we should assign the PR to"
   app_id:
@@ -25,8 +22,7 @@ inputs:
     required: true
   sign_commits:
     description: "Sign commits using GPG key, defaults to 'false'"
-    type: boolean
-    default: false
+    default: 'false'
     required: false
   dep_updater_gpg_private_key:
     description: "Need GPG private key for signing commits"
@@ -81,7 +77,7 @@ runs:
         # Optional (defaults to the current repository).
         # repository: "owner/repo"
     - uses: crazy-max/ghaction-import-gpg@v3
-      if: ${{ inputs.sign_commits }}
+      if: ${{ inputs.sign_commits == 'true' }}
       with:
         gpg-private-key: ${{ secrets.dep_updater_gpg_private_key }}
         passphrase: ${{ secrets.dep_updater_gpg_private_passphrase }}

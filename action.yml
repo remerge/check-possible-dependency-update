@@ -29,12 +29,15 @@ inputs:
   go_private:
     description: "Go private value"
     required: false
+    default: "github.com/remerge"
   commiter_name:
     description: "Name of the commiter"
     required: true
+    default: "Dependency Updater"
   commiter_email:
     description: "email of the commiter, without <>. If gpg_passpharse is used, commiter email must match gpg key's eamil"
     required: true
+    default: "it-owners+depupdater@remerge.io"
 
 runs:
   using: composite

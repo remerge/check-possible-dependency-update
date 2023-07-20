@@ -26,6 +26,15 @@ inputs:
   gpg_passphrase:
     description: "Need GPG passphrase key for signing commits"
     required: false
+  go_private:
+    description: "Go private value"
+    required: false
+  commiter_name:
+    description: "Name of the commiter"
+    required: true
+  commiter_email:
+    description: "email of the commiter, without <>. If gpg_passpharse is used, commiter email must match gpg key's eamil"
+    required: true
 
 runs:
   using: composite
@@ -51,7 +60,7 @@ runs:
 
     - shell: bash
       env:
-        GOPRIVATE: github.com/remerge
+        GOPRIVATE: ${{ inputs.go_private }}
         GO111MODULE: on
       run: |
         go get ${{ inputs.repo_path }}
@@ -75,8 +84,8 @@ runs:
     - uses: crazy-max/ghaction-import-gpg@v3
       if: ${{ inputs.gpg_private_key !== '' && inputs.gpg_private_key !== null }}
       with:
-        gpg-private-key: ${{ secrets.gpg_private_key }}
-        passphrase: ${{ secrets.gpg_passphrase }}
+        gpg-private-key: ${{ inputs.gpg_private_key }}
+        passphrase: ${{ inputs.gpg_passphrase }}
         git-user-signingkey: true
         git-commit-gpgsign: true
 
@@ -85,8 +94,8 @@ runs:
       with:
         token: ${{ steps.generate_app_token.outputs.token }}
         commit-message: Update ${{ inputs.repo_name }}
-        committer: Dependency Updater <tech@remerge.io>
-        author: Dependency Updater <tech@remerge.io>
+        committer: "${{ inputs.commiter_name }} <${{ inputs.commiter_email }}>"
+        author: "${{ inputs.commiter_name }} <${{ inputs.commiter_email }}>"
         signoff: false
         branch: update-${{ inputs.repo_name }}
         delete-branch: true

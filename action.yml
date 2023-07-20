@@ -76,7 +76,7 @@ runs:
       if: ${{ inputs.gpg_private_key !== '' && inputs.gpg_private_key !== null }}
       with:
         gpg-private-key: ${{ secrets.gpg_private_key }}
-        passphrase: ${{ secrets.gpg_private_key }}
+        passphrase: ${{ secrets.gpg_passphrase }}
         git-user-signingkey: true
         git-commit-gpgsign: true
 

@@ -3,15 +3,12 @@ description: Check a dependency for an update, open/update/close a PR if needed.
 
 inputs:
   repo_path:
-    type: string
     required: true
     description: "the one that looks like 'github.com/remerge/xyz'"
   repo_name:
-    type: string
     required: true
     description: "the one that looks like 'remerge/xyz'"
   assign_to:
-    type: string
     required: true
     description: "Github username we should assign the PR to"
   app_id:
@@ -23,6 +20,12 @@ inputs:
   ssh_key:
     description: "Need an SSH key to fetch private repos"
     required: true
+  gpg_private_key:
+    description: "Need GPG private key for signing commits"
+    required: false
+  gpg_passphrase:
+    description: "Need GPG passphrase key for signing commits"
+    required: false
 
 runs:
   using: composite
@@ -69,6 +72,13 @@ runs:
 
         # Optional (defaults to the current repository).
         # repository: "owner/repo"
+    - uses: crazy-max/ghaction-import-gpg@v3
+      if: ${{ inputs.gpg_private_key !== '' && inputs.gpg_private_key !== null }}
+      with:
+        gpg-private-key: ${{ secrets.gpg_private_key }}
+        passphrase: ${{ secrets.gpg_passphrase }}
+        git-user-signingkey: true
+        git-commit-gpgsign: true
 
     - name: Create or update pull request to update ${{ inputs.repo_name }}
       uses: peter-evans/create-pull-request@v4

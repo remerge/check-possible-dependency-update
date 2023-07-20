@@ -85,7 +85,7 @@ runs:
         # Optional (defaults to the current repository).
         # repository: "owner/repo"
     - uses: crazy-max/ghaction-import-gpg@v3
-      if: ${{ inputs.gpg_private_key !== '' && inputs.gpg_private_key !== null }}
+      if: ${{ inputs.gpg_private_key != '' && inputs.gpg_private_key != null }}
       with:
         gpg-private-key: ${{ inputs.gpg_private_key }}
         passphrase: ${{ inputs.gpg_passphrase }}
